@@ -1,5 +1,7 @@
 # ATU-10-BT: ATU-10 with Bluetooth Interface for Icom IC-705
 
+![](Pictures/ATU-10-BT.jpg)
+
 This project adds Bluetooth interface to the ATU-10 for use with the Icom IC-705 transceiver. The code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to IC-705, the Tuner will mainly operate as with the original FW 1.6.
 
 Main New Features:
@@ -17,7 +19,7 @@ After testing the Icom AH-705, the mAT-705 and ATU-10 tuners it appeared that al
 
 For more information, see the README files for each part of the project.
 #
-
+README file for ATU-10 by N7DDC FW version 1.6:
 # ATU-10  - The Tyny QRP Automatic Antenna Tuner
 
 ### Official conversation group - https://groups.io/g/ATU100
