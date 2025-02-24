@@ -17,14 +17,19 @@ BT Interface Bottom Side:\
 
 The BT interface is controlled entirely trough a UART serial port with Rx and Tx lines. The Rx and Tx lines are connected to the pins normally driving LED1-J3 on the ATU-10 board. LED1 is not needed on an ATU-10 with OLED display, and is usually not mounted - if mounted it has to be removed and replaced with header pins. If not already mounted, the ICSP-J5 connector also need header pins. It is also necessary to remove (or replace) C51 and C52 connected to the LED pins since the installed 10nF capacitors usually mounted will kill the Rx and Tx signals. The capacitors can be replaced with 220 pF ones if there is any issue with RF interference on the Rx and Tx lines, but this has not been an issue so far.
 
-ATU-10 Board with Relevant Component Locations:\
+ATU-10 Board with Location of Relevant Components:\
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-PCB.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-PCB.jpg)
 
-There seems to be a few different versions of the ATU-10 available and some may be more suited than others for this BT modification. The one used for development has a few noticeable features different from other versions: the end panels are fastened with hex cap-head screws, while some others use countersunk Phillips heads, and the BNC connectors are fastened with nuts, while some others don't have nuts. 
+ATU-10 Hardware Versions:\
+There seems to be a few different versions of the ATU-10 available and some may be more suited than others for the BT modification. The one used for development has a few noticeable features different from other versions though: the end panels are fastened with hex cap-head screws, the BNC connectors are fastened with nuts and the front panel has white frames around the openings. These features may (or not) give some indicatiaon on how suitable it is for modification.
 
-A note on the OLED display: the tuner used for development had an issue with random errors on the display, and als on a replacement display. This was tracked down to be a bad LDO voltage regulator on both displays and was fixed by replacing the LDO (f.e. AP2138N-3.3) - it is the 3 pin chip on the back side of the display.
+A note on the OLED display:\
+The tuner used for development had an issue with random errors on the display, and also on a replacement display. This was tracked down to be a bad LDO voltage regulator on both displays and was fixed by replacing the LDO (f.e. AP2138N-3.3) - it is the 3 pin chip on the back side of the display.
 
-Antenna Switch:\
-The project also includes an optional HF-VHF/UHF antenna switch and additional BNC connector. Mounting the BNC connector is a very thight fit and requires to remove the 3.5mm JACK1 (which is now redundant) and move T8 slightly sideways. A new back banel is also needed. The switch cause some issues with SWR on the UHF band, but keeping the coax short (like 40cm) between tranceiver and tuner bring this down to an acceptable level.
+### Antenna Switch:
+The project also includes an optional HF-VHF/UHF antenna switch and additional BNC connector. Mounting the BNC connector is a very thight fit and requires to remove the 3.5mm JACK1 (which is redundant when using BT) and move T8 slightly sideways. A new back banel is also needed. The switch cause some issues with increased SWR on the UHF band, but keeping the coax short (like 40cm) between tranceiver and tuner bring this down to an acceptable level.
 
+![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay.jpg)
 
+Suggested mounting of C2 and C3: vertically on the ATU10 board close to the relay:\
+![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg)
