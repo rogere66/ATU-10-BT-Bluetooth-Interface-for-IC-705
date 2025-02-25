@@ -21,4 +21,8 @@ Programming the Bluetooth interface requires a serial port with RX, TX, RTS and 
 There are probably easier methods for just programming the module, but now you also have the tools to build the code:
 - Delete existing source files `spp.c` and `COMPONENT_btstack_v1/wiced_bt_cfg.c`
 - Copy the IC-705-Tuner-BT source files into the project directory.
+- Open the `Library Manager` on the Quick Panel tab and change the CYW20721B2 library to release 4.2.1. If the CYW20721B2 library is not listed, use the `Add Library` tab to add it. Update and Close when done.
+- Open the `Device Configurator` on the Quick Panel tab and uncheck all pins and devices _except_ the main `Pins` box. Save and exit when done.
 - Select `Clean` and then `Build Application`.
+
+**NOTE:** The reason for changing the CYW20721B2 library to release 4.2.1 is that later releases have problems with Shut-Down-Sleep. The same problem arise when using the Device Configurator for pin allocation, thus all allocation is done in the in sorce code. If compiling the code it is thus advisable to check the current consumption of the BT module when in Shut-Down-Sleep, i.e. when power is on and the Rx pin pin is Low - it should be less than 5 uA.
