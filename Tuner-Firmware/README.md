@@ -1,25 +1,25 @@
 # Tuner-Firmware:
-The ATU10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW 1.6.
+The ATU10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW 1.6. The main purpose of the Bluetooth interface is to connect the Tuner to the IC-705 in order to change the Tuner relay setting on band change to previousely tuned bands. 
 
-Main New Features:\
+Main New Features:
 - Bluetooth interface for connection to the IC-705 transceiver:
   - Receive frequency/band and SWR information from the transceiver
   - Save and restore relay settings for each band
   - Update the Tuner SWR reading to match the transceiver SWR reading
+  - Handle automatic tuning start induvidually for ech band
 - Optionally add a HF-VHF/UHF antenna switch and additional BNC connector
 - Show current relay setting and band on the OLED display
 - OLED Settings menu for Cell Parameters, BT unpair and more
 - Slightly more persistent tuning algorithm that may tune some previously difficult antennas
 
-
-
-
-### OLED Display Layout:
+#### OLED Display Layout:
 The OLED display now includes Band Relay Setting and Bluetooth State in addition to Power, SWR and Battery.
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg)
 
-### Bluetooth Connection States:
+When the Tune Flag is on the Tuner will re-tune on next TX and the flag is cleared. A long Button push will set the Tune Flag again and force a manual re-tune. A short button push will set the Tuner in bypass and disable re-tuning.
+
+#### Bluetooth Connection States:
 When the Tuner is connected via Bluetooth to an IC-705, it will enter one of these States:
 - UNPAIRED - Will try to pair for 2 minutes after power up, then Bluetooth is turned off.
 - PAIRED - Will try to connect as long as power is on.
@@ -28,7 +28,7 @@ When the Tuner is connected via Bluetooth to an IC-705, it will enter one of the
 
 When NOT Connected or in Standby mode the tuner will operate as a normal automatic tuner and will shutdown after the time specified in the CELL setting.
 
-### Settings OLED Menu:
+#### Settings OLED Menu:
 The code now includes a Settings OLED menu which can be activated by pushing the button for more than 3 seconds. The menu is controlled by two button inputs:
 - SELECT - long button push: do some action on current menu item.
 - DONE   - short button push: done with current menu item, move on to next.
@@ -53,17 +53,17 @@ STANDBY sub-menu:
 - <-DONE     - Go back to main menu
 
 RELAY TEST sub-menu:
-- ANT RELAY? - Change antenna switch setting (only when not connected), SELECT to start
+- ANT RELAY? - Change antenna switch setting (only when not CONNECTED), SELECT to start
   -  HF      - HF antenna connector is selected, SELECT to change
   -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change
 - TUN RELAY? - SELECT to run and repeat Tuner relay test: Cycle all 15 relays
 - <-DONE     - Go back to main menu
 
-If standby is enabled, the tuner will enter standby mode after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. A short button push will power the Tuner up again trying to reconnect for a period, then disable standby and do a normal POWER OFF if not connecting. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
+If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. A short button push will power the Tuner up again trying to reconnect for a period, then disable standby and do a normal POWER OFF if not connecting. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
 Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a POWER OFF/ON cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
 
-The CELL parameters are as defined in FW 1.6 README file, but with some different default values:
+#### The CELL parameters are as defined in FW 1.6 README file, but with some different default values:
 1) Time to display off in minutes, 2 mins by default, 0 to always on display
 2) Time to power off in minutes, 30 mins by default, 0 to always power on
 3) Relay's delay time, voltage applied to coiled in ms, 3 ms by default (using AXICOM IM41 3VDC relays)
