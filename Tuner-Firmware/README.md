@@ -39,12 +39,10 @@ Settings Menu:
 - CLR BANDS  - Clear relay settings for all bands
 - UNPAIR BT  - Unpair Bluetooth and start new pairing sequence
 - STANDBY    - Change standby settings
-- ANT SWITCH - Change antenna switch setting (only when not connected), SELECT to start
-  -  HF      - HF antenna connector is selected, SELECT to change
-  -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change
+- RELAY TEST - Tuner and Antenna Relay Tests
 - BRIGHT=xxx - Change OLED brightness, 0-100%
 - RESTORE    - Restore all settings in EEPROM to defaults
-- TUNER INFO - Show tuner power-up info with firmware versions, BD Address etc.
+- TUNER INFO - Show tuner power-up info with firmware versions.
 - <=DONE     - Go back to normal Tuner operation
 
 STANDBY sub-menu:
@@ -52,6 +50,13 @@ STANDBY sub-menu:
   - INFINITE - Standby Infinitely On, SELECT to change
   -   OFF - Standby Off, SELECT to change
 - DLAY S xxx - Time between each connect retry
+- <-DONE     - Go back to main menu
+
+RELAY TEST sub-menu:
+- ANT RELAY? - Change antenna switch setting (only when not connected), SELECT to start
+  -  HF      - HF antenna connector is selected, SELECT to change
+  -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change
+- TUN RELAY? - SELECT to run and repeat Tuner relay test: Cycle all 15 relays
 - <-DONE     - Go back to main menu
 
 If standby is enabled, the tuner will enter standby mode after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. A short button push will power the Tuner up again trying to reconnect for a period, then disable standby and do a normal POWER OFF if not connecting. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
