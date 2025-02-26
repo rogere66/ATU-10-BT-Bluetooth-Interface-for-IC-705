@@ -1,79 +1,40 @@
-# Tuner-Firmware:
-The ATU10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW 1.6.
+# Bluetooth-Firmware:
 
-Main New Features:\
-- Bluetooth interface for connection to the IC-705 transceiver:
-  - Receive frequency/band and SWR information from the transceiver
-  - Save and restore relay settings for each band
-  - Update the Tuner SWR reading to match the transceiver SWR reading
-- Optionally add a HF-VHF/UHF antenna switch and additional BNC connector
-- Show current relay setting and band on the OLED display
-- OLED Settings menu for Cell Parameters, BT unpair and more
-- Slightly more persistent tuning algorithm that may tune some previously difficult antennas
+The Bluetooth interface (BT) is controlled entirely trough a UART serial port with Rx and Tx lines. The Rx line also controls the BT power state: when the line is permanently low the module enters Shut Down Sleep, and when high the module is Active. When Active, BT will enter one of three modes:
+ - **Unpaired**: BT will search for any device named `ICOM BT(IC-705)`, the default device name for IC-705. On the IC-705 you then need to select `<<Pairing Reception>>` in the MENU/SET/Bluetooth Set menu, and BT will then connect and pair to this device.
+ - **Paired**: BT will try to connect as long as it is Active.
+ - **Connected**: BT will receive Frequency, SWR and other information from the Transceiver and send relevant info to the Tuner.
 
+The BT interface includes a 2nd serial port connector for programming and debugging - this port also requires the RTS and CTS signals, in addition to Rx and Tx. When programmed it is possible to use a serial terminal application and connect to the serial port at 115200 baud. To connect, press the Reset button on the BT board, then hit `r` or `linefeed` on the terminal, then `CLI` to enable Command Line commands (`h` for help). From there you can Unpair BT to start a new pairing sequence, display some status info and not least connect to the Tuner, which also have some CLI commands.
 
+### Programming the BT Interface:
+Programming the Bluetooth interface requires a serial port with RX, TX, RTS and CTS connected. Programming can be done using the included AIROC_MOD_Prog programmer on a Windows PC:
+- Unzip the file and run the AIROC_MOD_Programmer.
+- Select Module Name `CYBT-413061-02`
+- Select serial port on one of the DUT lines.
+- Select the Firmware File.
+- Tick the `Program BD Address` and `Gen a random address` boxes to get a unique local BD address.
+- Put the ATU-10-BT board in download mode: Push and hold the RECOVERY button, push and release the RESET button and then release the RECOVERY button after 1 second.
+- Hit `Program` and wait for completion.
 
+### Programming and Building the code on any platform:
+Programming can also be done using Infineon ModusToolbox:
+- Download ModusToolbox from the https://www.infineon.com/ website and follow the installation instructions for Eclipse based IDE.
+- Open the ModusToolbox IDE and select `New Application` on the `Quick Panel/Eclipse based IDE for ModusToolbox` tab to open the Project Creator window.
+- Search for `CYBT-413061-EVAL` board, select `Bluetooth/RFCOMM Serial Port` sample project and hit `Create` to create the project.
+- Select the new project on the Project tab (default name RFCOMM_Serial_Port) and hit `Build Application` on the Quick Panel tab.
+- Locate the `build/CYBT-413061-EVAL/Debug` directory for the project and replace `BT_SPP_download.hex` with the release file for IC-705-Tuner-BT (name need to be changed).
+- Put the ATU-10-BT board in download mode: Push and hold the RECOVERY button, push and release the RESET button and then release the RECOVERY button after 1 second.
+- Open a Terminal widow and CD into the RFCOMM_Serial_Port project directory.
+- Enter command `make qprogram` to program the module (option `UART=<PORT>` can be added to select a specific port). This will program the module, but it will NOT get a unique BD address, which may be a problem if 2 or more modules are used near each other.
 
-### OLED Display Layout:
-The OLED display now includes Band Relay Setting and Bluetooth State in addition to Power, SWR and Battery.
+A full ModusToolbox IDE for just programming the module may be overkill, but now you also have the tools to build the code:
+- Delete existing source files `spp.c` and `COMPONENT_btstack_v1/wiced_bt_cfg.c`
+- Copy the IC-705-Tuner-BT source files into the project directory.
+- Open the `Library Manager` on the Quick Panel tab and change the CYW20721B2 library to release 4.2.1. If the CYW20721B2 library is not listed, use the `Add Library` tab to add it. Update and Close when done.
+- Open the `Device Configurator` on the Quick Panel tab and untick all pins and devices _except_ the main `Pins` box. Save and exit when done.
+- Select `Clean` and then `Build Application`.
 
-![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg)
+**NOTE:** The reason for changing the CYW20721B2 library to release 4.2.1 is that later releases have problems with Shut-Down-Sleep. The same problem arise when using the Device Configurator for pin allocation, thus all allocations are done in the source code. If compiling the code it is thus advisable to check the current consumption of the BT module when in Shut-Down-Sleep, i.e. when power is on and the Rx pin pin is Low - it should be less than 5 uA.
 
-### Bluetooth Connection States:
-When the Tuner is connected via Bluetooth to an IC-705, it will enter one of these States:
-- UNPAIRED - Will try to pair for 2 minutes after power up, then Bluetooth is turned off.
-- PAIRED - Will try to connect as long as power is on.
-- CONNECTED - Provides BT communication between tuner and transceiver - and enter standby mode when disconnected.
-- STANDBY - Will try to reconnect for number of hours defined by the standby hours setting. Wake on short button push after standby period.
-
-When NOT Connected or in Standby mode the tuner will operate as a normal automatic tuner and will shutdown after the time specified in the CELL setting.
-
-### Settings OLED Menu:
-The code now includes a Settings OLED menu which can be activated by pushing the button for more than 3 seconds. The menu is controlled by two button inputs:
-- SELECT - long button push: do some action on current menu item.
-- DONE   - short button push: done with current menu item, move on to next.
-
-Settings Menu:
-- POWER OFF  - Power off sleep
-- CELL PARAM - Change the CELL parameters defined in FW 1.6 README file
-- CLR BANDS  - Clear relay settings for all bands
-- UNPAIR BT  - Unpair Bluetooth and start new pairing sequence
-- STANDBY    - Change standby settings
-- ANT SWITCH - Change antenna switch setting (only when not connected), SELECT to start
-  -  HF      - HF antenna connector is selected, SELECT to change
-  -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change
-- BRIGHT=xxx - Change OLED brightness, 0-100%
-- RESTORE    - Restore all settings in EEPROM to defaults
-- TUNER INFO - Show tuner power-up info with firmware versions, BD Address etc.
-- <=DONE     - Go back to normal Tuner operation
-
-STANDBY sub-menu:
-- HOURS  xxx - Number of hours active standby, select 0 to turn OFF, 255 for INFINITE
-  - INFINITE - Standby Infinitely On, SELECT to change
-  -   OFF - Standby Off, SELECT to change
-- DLAY S xxx - Time between each connect retry
-- <-DONE     - Go back to main menu
-
-If standby is enabled, the tuner will enter standby mode after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. A short button push will power the Tuner up again trying to reconnect for a period, then disable standby and do a normal POWER OFF if not connecting. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
-
-Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a POWER OFF/ON cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
-
-The CELL parameters are as defined in FW 1.6 README file, but with some different default values:
-1) Time to display off in minutes, 2 mins by default, 0 to always on display
-2) Time to power off in minutes, 30 mins by default, 0 to always power on
-3) Relay's delay time, voltage applied to coiled in ms, 3 ms by default (using AXICOM IM41 3VDC relays)
-4) Min power to start tuning in ten's parts of Watt, 10 by default (1.0 W). This value can not be 0
-5) Max power to start tuning in watts, 15 by default
-6) Delta SWR to auto start tuning in ten's parts SWR, 13 by default (SWR = 1.3)
-7) Auto mode 1 for activate or 0 to off. 1 by default
-8) Calibration coefficient for 1W power, 4 by default for BAT41 diodes
-9) calibration coefficient for 10W power, 14 by default for BAT41 diodes
-10) Peak detector time for Power measurement in tens ms, 60 (600ms)
-
-Note particularly parameter 3, relay delay time - this may need to be increased if relays other than genuine AXICOM IM41 3VDC are used. The Tuner CLI menu has a Relay Test (`t`) that may be useful in testing this.
-
-
-
-
-
-
+Also note that the changes to library and pin selection is done on the BSP for the CYBT-413061-EVAL board and if a new application is created using this board, the BSP will be overwritten and the changes lost. This can be avoided by making a local copy of the BSP with a different name (also on the .mk file inside the BSP) and updating the makefile to enable and use this BSP.
