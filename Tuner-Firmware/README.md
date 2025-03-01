@@ -28,7 +28,7 @@ The OLED display now includes Band Relay Setting and Bluetooth State in addition
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg)
 
-When the Tune Flag is on the Tuner will tune on next TX and the flag is cleared. A long Button push will set the Tune Flag again and force a manual re-tune. A short button push will set the Tuner in bypass and disable tuning.
+When the Tune Flag is on the Tuner will tune on next TX and the flag is cleared. A long Button push will set the Tune Flag again and force a manual re-tune. It can be worthwhile to re-tune if there is a significant SWR increase right after tuning. A short button push will set the Tuner in bypass and disable tuning.
 
 ### Settings OLED Menu:
 The code now includes a Settings OLED menu which can be activated by pushing the button for more than 3 seconds. The menu is controlled by two button inputs:
@@ -83,4 +83,4 @@ Note particularly parameter 3, relay delay time - this may need to be increased 
 The BT Interface will over all not significantly increase power consumption. When BT is Connected, the Tuner is turned off whenever the OLED display is off and this may actually reduce power consumption somewhat. Standby mode use some power, but reasonably good batteries should still last 1-2 months with 90 second retry interval. If using the Tuner for extended periods without using BT it will reduce power consumption slightly by Unpairing BT, since it otherwise will continuously try reconnecting.
 
 ### Compiling the Code
-The code can be compiled using the free MPLAB X IDE and XC8 compiler from [Microchip](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide). Just make a project for the pic16f18877 chip and copy in the Tuner sources. Note that the free version of the XC8 compiler has limited optimization and thus tuning is a bit slower than for FW 1.6. However, this is to a large degree compensated for by optimizing delays in the code and also, when connected, tuning is not done that often.
+The code can be compiled using the free MPLAB X IDE and XC8 compiler from [Microchip](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide). Just make a project for the pic16f18877 chip and copy in the Tuner sources. Note that the free version of the XC8 compiler has limited optimization and thus tuning is a bit slower than for FW 1.6. However, this is to a large degree compensated for by optimizing delays in the code and also, when connected, tuning is often not needed.
