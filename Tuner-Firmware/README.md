@@ -1,5 +1,5 @@
 # Tuner-Firmware:
-The ATU-10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW 1.6. The main purpose of the Bluetooth interface is to connect the Tuner to the IC-705 in order to change the Tuner relay setting on band change to previously tuned bands. 
+The ATU-10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW v1.6. The main purpose of the Bluetooth interface is to connect the Tuner to the IC-705 in order to change the Tuner relay setting on band change to previously tuned bands. 
 
 Main New Features:
 - Bluetooth interface for connection to the IC-705 transceiver:
@@ -37,7 +37,7 @@ The code now includes a Settings OLED menu which can be activated by pushing the
 
 #### Settings Menu:
 - POWER OFF  - Power off sleep
-- CELL PARAM - Change the CELL parameters as defined in FW 1.6 README file
+- CELL PARAM - Change the CELL parameters as defined in FW v1.6 README file
 - CLR BANDS  - Clear relay settings for all bands
 - UNPAIR BT  - Unpair Bluetooth and start new pairing sequence (may fail if BT is busy - try again)
 - STANDBY    - Change standby settings
@@ -80,7 +80,7 @@ Note that the menu is blocking tuner operation and the tuner may be out of sync 
 Note particularly parameter 3, relay delay time - this may need to be increased if relays other than genuine AXICOM IM41 3VDC are used. The OLED Settings Menu has a TUNER RLY test that may be useful for testing.
 
 ### Power Consumption
-The BT Interface will over all not significantly increase power consumption. When BT is Connected, the Tuner is turned off whenever the OLED display is off and this may actually reduce power consumption somewhat. Standby mode use some power, but reasonably good batteries should still last 1-2 months with 90 second retry interval. If using the Tuner for extended periods without using BT it will reduce power consumption slightly by Unpairing BT, since it otherwise will continuously try reconnecting.
+The BT Interface will not significantly increase power consumption. When BT is Connected, the Tuner is turned off whenever the OLED display is off and this may actually reduce power consumption somewhat. Standby mode use some power, but reasonably good batteries should still last 1-2 months with 90 second retry interval. If using the Tuner for extended periods without using BT, Unpairing BT will reduce power consumption somewhat since it otherwise will continuously try reconnecting.
 
 ### Compiling the Code
-The code can be compiled using the free MPLAB X IDE and XC8 compiler from [Microchip](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide). Just make a project for the pic16f18877 chip and copy in the Tuner sources. Note that the free version of the XC8 compiler has limited optimization and thus tuning is a bit slower than for FW 1.6. However, this is to a large degree compensated for by optimizing delays in the code and also, when connected, tuning is often not needed.
+The code can be compiled using the free MPLAB X IDE and XC8 compiler from [Microchip](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide). Just make a project for the pic16f18877 chip and copy in the Tuner sources. Note that the free version of the XC8 compiler has limited optimization and thus tuning is slower than for FW v1.6. However, this is to a large degree compensated for by optimizing delays in the code and also, when connected, tuning is often not needed.
