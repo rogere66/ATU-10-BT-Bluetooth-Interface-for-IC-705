@@ -27,9 +27,12 @@ A note on the OLED display:\
 The tuner used for development had an issue with random errors on the display, and also on a replacement display. This was tracked down to be a bad LDO voltage regulator on both displays and was fixed by replacing the LDO (f.e. AP2138N-3.3) - it is the 3 pin chip on the back side of the display.
 
 ### Antenna Switch:
-The project also includes an optional HF-VHF/UHF antenna switch and additional BNC connector. Mounting the BNC connector is a very thight fit and requires to remove the 3.5mm JACK1 (which is redundant when using BT) and move T8 slightly sideways. A new back banel is also needed. The switch cause some issues with increased SWR on the UHF band, but keeping the coax short (like 40cm) between tranceiver and tuner bring this down to an acceptable level.
+The project also includes an optional HF-VHF/UHF antenna switch and additional BNC connector. Mounting the BNC connector is a very thight fit and requires to remove the 3.5mm JACK1 (which is redundant when using BT) and move T8 slightly sideways. A new back panel is also needed. The switch cause some issues with increased SWR on the UHF band, but keeping the coax short (like 40cm) between tranceiver and tuner bring this down to an acceptable level.
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay.jpg)
 
-Suggested mounting of C2 and C3: vertically on the ATU10 board close to the relay:\
+Suggested mounting of C2 and C3, vertically on the ATU10 board close to the relay:\
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg)
+
+That's all!\
+![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-BT-Back.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-BT-Back.jpg)
