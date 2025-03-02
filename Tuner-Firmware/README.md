@@ -19,7 +19,7 @@ When the Tuner is connected via Bluetooth to an IC-705, it will enter one of the
 - UNPAIRED - Will try to pair for 2 minutes after power up, then Bluetooth is turned off.
 - PAIRED - Will try to connect as long as power is on.
 - CONNECTED - Provides BT communication between tuner and transceiver - and enter standby mode when disconnected.
-- STANDBY - Will try to reconnect for number of hours defined by the standby hours setting. Wake on short button push after standby period.
+- STANDBY - Will try to reconnect for number of hours defined by the standby hours setting. Will wake and exit standby on any button action.
 
 When NOT Connected or in Standby mode the tuner will operate as a regular automatic tuner and will shut down after the time specified in the CELL setting.
 
@@ -61,7 +61,7 @@ The code now includes a Settings OLED menu which can be activated by pushing the
 - TUNER RLY? - SELECT to run and repeat Tuner relay test: Cycle all 15 relays
 - <-DONE     - Go back to main menu
 
-If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. A short button push will power the Tuner up again trying to reconnect for a period, then disable standby and do a normal POWER OFF if not connecting. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
+If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period, then disable standby and do a normal POWER OFF if not connecting. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
 Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a POWER OFF/ON cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
 
