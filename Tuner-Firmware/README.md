@@ -37,8 +37,8 @@ The code now includes a Settings OLED menu which can be activated by pushing the
 
 #### Settings Menu:
 - POWER OFF  - Power off sleep
-- CELL PARAM - Change the CELL parameters as defined in FW v1.6 README file
 - CLR BANDS  - Clear relay settings for all bands
+- CELL PARAM - Change the CELL parameters as defined in FW v1.6 README file
 - UNPAIR BT  - Unpair Bluetooth and start new pairing sequence (may fail if BT is busy - try again)
 - STANDBY    - Change standby settings
 - RELAY TEST - Tuner and Antenna Relay Tests
