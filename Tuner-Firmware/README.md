@@ -44,7 +44,8 @@ The code now includes a Settings OLED menu which can be activated by pushing the
 - RELAY TEST - Tuner and Antenna Relay Tests
 - BRIGHT=xxx - Change OLED brightness, 0-100%
 - RESTORE    - Restore all settings in EEPROM to defaults
-- TUNER INFO - Show tuner power-up info with firmware versions.
+- TUNER INFO - Show tuner power-up info with firmware versions and set debug info level.
+  - DB LEVEL x - Change debug level, 0-3. Sniff the Tuner TX line for printouts (115200 baud).
 - <=DONE     - Go back to normal Tuner operation
 
 #### STANDBY sub-menu:
@@ -58,12 +59,16 @@ The code now includes a Settings OLED menu which can be activated by pushing the
 - ANT RELAY? - Change antenna switch setting (only when not CONNECTED), SELECT to start
   -  HF      - HF antenna connector is selected, SELECT to change (may fail if BT is busy - try again)
   -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change
-- TUNER RLY? - SELECT to run and repeat Tuner relay test: Cycle all 15 relays
+- TUNER RLY? - SELECT to run Tuner relay test - cycle all 15 relays
+- TUNE L xxx - Set inductive tuner element, 0-127.
+- TUNE C xxx - Set capacitive tuner element 0-127.
+- TUNE I x   - Set LC/CL and Tune Flag (bit 1), 0-3.
+- SAVE LCI?  - Save LCI relay settings in EEPROM (only if band is known).
 - <-DONE     - Go back to main menu
 
 If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period - another short button push will clear stanby. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
-Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a POWER OFF/ON cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
+Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a power cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
 
 #### The CELL parameters are as defined in FW 1.6 README file, but with some different default values:
 1) Time to display off in minutes, 2 mins by default, 0 to always on display
