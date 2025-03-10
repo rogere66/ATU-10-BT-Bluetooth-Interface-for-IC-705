@@ -6,16 +6,16 @@ This project adds Bluetooth interface to the ATU-10 for use with the Icom IC-705
 
 Main New Features:
 - Bluetooth interface for connection to the IC-705 transceiver:
-  - Receive frequency/band and SWR information from the transceiver
-  - Save and restore relay settings for each band
-  - Update the Tuner SWR reading to match the transceiver SWR reading
-- Optionally add a HF-VHF/UHF antenna switch and additional BNC connector
-- Show current relay setting and band on the OLED display
-- OLED Settings menu for Cell Parameters, BT unpair and more
-- Slightly more persistent tuning algorithm that may tune some previously difficult antennas
+  - Receive frequency/band and SWR information from the transceiver.
+  - Save and restore relay settings for each band.
+  - Update the Tuner SWR reading to match the transceiver SWR reading.
+- Optionally add a HF-VHF/UHF antenna switch and additional BNC connector.
+- Show current relay setting and band on the OLED display.
+- OLED Settings menu for Cell Parameters, BT unpair, relay testing and more.
+- Slightly more persistent tuning algorithm that may tune some previously difficult antennas.
 
 Background:\
-After testing the Icom AH-705, the mAT-705 and ATU-10 tuners it appeared that all had less than desired integration level with the transceiver, i.e. they all actually needed RF transmission in order to set the relays to previously tuned bands. A Bluetooth interface for the ATU-10 then seemed like a reasonable solution - and a reasonable sized project since it was all open source.
+After testing the Icom AH-705, the mAT-705 and ATU-10 tuners it appeared that all had less than desired integration level with the transceiver, i.e. they all actually needed RF transmission in order to set the relays for previously tuned bands. A Bluetooth interface for the ATU-10 then seemed like a reasonable solution - and a reasonable sized project since it was all open source.
 
 For more information, see the README files for each part of the project.
 #
