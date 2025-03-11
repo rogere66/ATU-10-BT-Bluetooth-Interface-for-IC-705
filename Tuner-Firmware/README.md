@@ -42,10 +42,11 @@ The code now includes a Settings OLED menu which can be activated by pushing the
 - UNPAIR BT  - Unpair Bluetooth and start new pairing sequence (may fail if BT is busy - try again)
 - STANDBY    - Change standby settings
 - RELAY TEST - Tuner and Antenna Relay Tests
-- BRIGHT=xxx - Change OLED brightness, 0-100%
+- BRIGHT xxx - Change OLED brightness, 0-100%
 - RESTORE    - Restore all settings in EEPROM to defaults
-- TUNER INFO - Show tuner power-up info with firmware versions and set debug info level.
-  - DB LEVEL x - Change debug level, 0-3. Sniff the Tuner TX line for printouts (115200 baud).
+- TUNER INFO - Show tuner info with firmware versions, battery and set debug info level.
+  - BATTERY x.xxx V - Battery voltage.
+  - DEBUG LEVEL x - Change debug level, 0-3. Sniff the Tuner TX line for printouts (115200 baud).
 - <=DONE     - Go back to normal Tuner operation
 
 #### STANDBY sub-menu:
