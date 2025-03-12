@@ -28,7 +28,7 @@ The OLED display now includes Band Relay Setting and Bluetooth State in addition
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg)
 
-When the Tune Flag is on the Tuner will tune on next TX and the flag is cleared. A long Button push will set the Tune Flag again and force a manual re-tune. It can be worthwhile to re-tune if there is a significant SWR increase right after tuning. A short button push will set the Tuner in bypass and disable tuning.
+When the Tune Flag is on the Tuner will tune on next TX and the flag is cleared. A long Button push will set the Tune Flag again and force a manual re-tune. It can be worthwhile to re-tune if there is a significant SWR increase right after tuning. A short button push will set the Tuner in bypass and disable tuning. The SWR Correction Flag indicates that the SWR is adjusted to match the transceiver SWR - the correction and flag is cleared on band change.
 
 ### Settings OLED Menu:
 The code now includes a Settings OLED menu which can be activated by pushing the button for more than 3 seconds. The menu is controlled by two button inputs:
