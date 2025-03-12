@@ -3,14 +3,13 @@ The ATU-10-BT code is based on ATU-10 FW version 1.6 and is ported from microC t
 
 Main New Features:
 - Bluetooth interface for connection to the IC-705 transceiver:
-  - Receive frequency/band and SWR information from the transceiver
-  - Save and restore relay settings for each band
-  - Update the Tuner SWR reading to match the transceiver SWR reading
-  - Handle automatic tuning start individually for each band
-- Show current relay setting and band on the OLED display
-- OLED Settings menu for Cell Parameters, BT unpair and more
-- Slightly more persistent tuning algorithm that may tune some previously difficult antennas
-- Optionally add a HF-VHF/UHF antenna switch and additional BNC connector
+  - Receive frequency/band and SWR information from the transceiver.
+  - Save and restore relay settings for each band.
+  - Update the Tuner SWR reading to match the transceiver SWR reading.
+- Optionally add a HF-VHF/UHF antenna switch and additional BNC connector.
+- Show current relay setting and band on the OLED display.
+- Extensive OLED Settings menu for Cell Parameters, BT unpair, relay testing and more.
+- Slightly more persistent tuning algorithm that may tune some previously difficult antennas.
 
 Note that if this firmware is used without the Bluetooth Interface it is important that LED1 is NOT installed - otherwise it will light up and drain the battery, also when power is off.
 
