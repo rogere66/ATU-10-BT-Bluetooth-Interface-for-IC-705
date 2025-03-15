@@ -44,9 +44,10 @@ The code includes a Settings OLED menu which can be activated by pushing the but
 - RELAY TEST - Tuner and Antenna Relay Tests.
 - RESTORE    - Restore all settings in EEPROM to defaults.
 - TUNER DISP - Show/set various tuner info and settings.
+  - PWRUP INFO - Show power-up greeting.
   - BATTERY x.xxx V - Battery voltage.
   - DEBUG LEVEL x - Change debug level, 0-3. Sniff the Tuner TX line for printouts (115200 baud).
-  - BRIGHT xxx - Change OLED brightness.
+  - BRIGHT xx - Change OLED brightness.
 - <=DONE     - Go back to normal Tuner operation.
 
 #### STANDBY sub-menu:
@@ -55,6 +56,8 @@ The code includes a Settings OLED menu which can be activated by pushing the but
   -   OFF - Standby Off, SELECT to change.
 - DLAY S xxx - Time between each connect retry.
 - <-DONE     - Go back to main menu.
+
+If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period - another short button push will clear stanby. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
 #### RELAY TEST sub-menu:
 - ANT RELAY? - Change antenna switch setting (only when not CONNECTED), SELECT to start.
@@ -66,8 +69,6 @@ The code includes a Settings OLED menu which can be activated by pushing the but
 - TUNE I x   - Set LC/CL and Tune Flag (bit 1), 0-3.
 - SAVE LCI?  - Save LCI relay settings in EEPROM (only if band is known).
 - <-DONE     - Go back to main menu.
-
-If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period - another short button push will clear stanby. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
 Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a power cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
 
