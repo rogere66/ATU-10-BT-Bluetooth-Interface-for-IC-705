@@ -23,48 +23,49 @@ When the Tuner is connected via Bluetooth to an IC-705, it will enter one of the
 When NOT Connected or in Standby mode the tuner will operate as a regular automatic tuner and will shut down after the time specified in the CELL setting.
 
 ### OLED Display Layout:
-The OLED display now includes Band Relay Setting and Bluetooth State in addition to Power, SWR and Battery.
+The OLED display includes Band Relay Setting and Bluetooth State in addition to Power, SWR and Battery.
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg)
 
 When the Tune Flag is on the Tuner will tune on next TX and the flag is cleared. A long Button push will set the Tune Flag again and force a manual re-tune. It can be worthwhile to re-tune if there is a significant SWR increase right after tuning. A short button push will set the Tuner in bypass and disable tuning. The SWR Correction Flag indicates that the SWR is adjusted to match the transceiver SWR - the correction and flag is cleared on band change.
 
 ### Settings OLED Menu:
-The code now includes a Settings OLED menu which can be activated by pushing the button for more than 3 seconds. The menu is controlled by two button inputs:
+The code includes a Settings OLED menu which can be activated by pushing the button for more than 3 seconds. The menu is controlled by these button inputs:
 - SELECT - long button push: do some action on current menu item.
 - DONE   - short button push: done with current menu item, move on to next.
+- UP/DOWN - double short button push: change step direction when changing values - down is indicated by a down arrow.
 
 #### Settings Menu:
 - POWER OFF  - Power off sleep
-- CLR BANDS  - Clear relay settings and set Tune Flag for all bands
-- CELL PARAM - Change the CELL parameters as defined in FW v1.6 README file
-- UNPAIR BT  - Unpair Bluetooth and start new pairing sequence (may fail if BT is busy - try again)
-- STANDBY    - Change standby settings
-- RELAY TEST - Tuner and Antenna Relay Tests
-- BRIGHT xxx - Change OLED brightness, 0-100%
-- RESTORE    - Restore all settings in EEPROM to defaults
-- TUNER INFO - Show tuner info with firmware versions, battery and set debug info level.
+- CLR BANDS  - Clear relay settings and set Tune Flag for all bands.
+- CELL PARAM - Change the CELL parameters as defined in FW v1.6 README file.
+- UNPAIR BT  - Unpair Bluetooth and start new pairing sequence (may fail if BT is busy - try again).
+- STANDBY    - Change standby settings.
+- RELAY TEST - Tuner and Antenna Relay Tests.
+- RESTORE    - Restore all settings in EEPROM to defaults.
+- TUNER DISP - Show/set various tuner info and settings.
   - BATTERY x.xxx V - Battery voltage.
   - DEBUG LEVEL x - Change debug level, 0-3. Sniff the Tuner TX line for printouts (115200 baud).
-- <=DONE     - Go back to normal Tuner operation
+  - BRIGHT xxx - Change OLED brightness.
+- <=DONE     - Go back to normal Tuner operation.
 
 #### STANDBY sub-menu:
-- HOURS  xxx - Number of hours active standby, select 0 to turn OFF, 255 for INFINITE
-  - INFINITE - Standby Infinitely On, SELECT to change
-  -   OFF - Standby Off, SELECT to change
-- DLAY S xxx - Time between each connect retry
-- <-DONE     - Go back to main menu
+- HOURS  xxx - Number of hours active standby, select 0 to turn OFF, 255 for INFINITE.
+  - INFINITE - Standby Infinitely On, SELECT to change.
+  -   OFF - Standby Off, SELECT to change.
+- DLAY S xxx - Time between each connect retry.
+- <-DONE     - Go back to main menu.
 
 #### RELAY TEST sub-menu:
-- ANT RELAY? - Change antenna switch setting (only when not CONNECTED), SELECT to start
-  -  HF      - HF antenna connector is selected, SELECT to change (may fail if BT is busy - try again)
-  -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change
-- TUNER RLY? - SELECT to run Tuner relay test - cycle all 15 relays
+- ANT RELAY? - Change antenna switch setting (only when not CONNECTED), SELECT to start.
+  -  HF      - HF antenna connector is selected, SELECT to change (may fail if BT is busy - try again).
+  -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change.
+- TUNER RLY? - SELECT to run Tuner relay test - cycle all 15 relays.
 - TUNE L xxx - Set inductive tuner element, 0-127.
 - TUNE C xxx - Set capacitive tuner element 0-127.
 - TUNE I x   - Set LC/CL and Tune Flag (bit 1), 0-3.
 - SAVE LCI?  - Save LCI relay settings in EEPROM (only if band is known).
-- <-DONE     - Go back to main menu
+- <-DONE     - Go back to main menu.
 
 If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period - another short button push will clear stanby. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
