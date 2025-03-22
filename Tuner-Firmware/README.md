@@ -84,7 +84,7 @@ Note that the menu is blocking tuner operation and the tuner may be out of sync 
 9) calibration coefficient for 10W power, 14 by default for BAT41 diodes
 10) Peak detector time for Power measurement in tens ms, 60 (600ms)
 
-Note particularly parameter 3, relay delay time - this may need to be increased if relays other than genuine AXICOM IM41 3VDC are used. The OLED Settings Menu has a TUNER RLY test that may be useful for testing.
+Note particularly parameter 3, relay delay time - this may need to be increased if relays other than genuine AXICOM IM41 3VDC are used. The OLED Settings Menu has a RELAY TEST that may be useful for testing.
 
 ### Power Consumption
 The BT Interface will not significantly increase power consumption. When BT is Connected, the Tuner is turned off whenever the OLED display is off and this may actually reduce power consumption somewhat. Standby mode use some power, but reasonably good batteries should still last 1-2 months with 90 second retry interval. If using the Tuner for extended periods without using BT, Unpairing BT will reduce power consumption somewhat since it otherwise will continuously try reconnecting.
