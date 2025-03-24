@@ -6,7 +6,7 @@ Main New Features:
   - Receive frequency/band and SWR information from the transceiver.
   - Save and restore relay settings for each band.
   - Update the Tuner SWR reading to match the transceiver SWR reading.
-- Optionally add a HF-VHF/UHF antenna switch and additional BNC connector.
+  - Optionally add a HF-VHF/UHF antenna switch and additional BNC connector.
 - Show current relay setting and band on the OLED display.
 - Extensive OLED Settings menu for Cell Parameters, BT unpair, relay testing and more.
 - Slightly more persistent tuning algorithm that may tune some previously difficult antennas.
