@@ -43,9 +43,9 @@ The code includes a Settings OLED menu which can be activated by pushing the but
 - STANDBY    - Change standby settings.
 - RELAY TEST - Tuner and Antenna Relay Tests.
 - RESTORE    - Restore all settings in EEPROM to defaults.
-- TUNER DISP - Show/set various tuner info and settings.
-  - PWRUP INFO - Show power-up greeting.
-  - BATTERY x.xxx V - Battery voltage.
+- TUNER CONF - Tuner configuration. Show info and set various tuner settings.
+  - INFO     - Show power-up greeting and battery voltage.
+  - SWR CORR ON/OFF x - SWR correction enable/disable.
   - DEBUG LEVEL x - Change debug level, 0-3. Sniff the Tuner TX line for printouts (115200 baud).
   - BRIGHT xx - Change OLED brightness.
 - <=DONE     - Go back to normal Tuner operation.
