@@ -57,17 +57,17 @@ The code includes a Settings OLED menu which can be activated by pushing the but
 - DLAY S xxx - Time between each connect retry.
 - <-DONE     - Go back to main menu.
 
-If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period - another short button push will clear stanby. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
+If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period - another short button push will clear standby. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
 #### RELAY TEST sub-menu:
-- ANT RELAY? - Change antenna switch setting (only when not CONNECTED), SELECT to start.
+- ANT RELAY  - Change antenna switch setting (only when not CONNECTED), SELECT to start.
   -  HF      - HF antenna connector is selected, SELECT to change (may fail if BT is busy - try again).
   -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change.
-- TUNER RLY? - SELECT to run Tuner relay test - cycle all 15 relays.
-- TUNE L xxx - Set inductive tuner element, 0-127.
-- TUNE C xxx - Set capacitive tuner element 0-127.
+- TUNER RLY  - SELECT to run Tuner relay test - cycle all 15 relays.
+- TUNE L xxx - Manual tuning of inductive tuner element, 0-127.
+- TUNE C xxx - Manual tuning of capacitive tuner element 0-127.
 - TUNE I x   - Set LC/CL and Tune Flag (bit 1), 0-3.
-- SAVE LCI?  - Save LCI relay settings in EEPROM (only if band is known).
+- SAVE LCI   - Save LCI relay settings in EEPROM (only if band is known).
 - <-DONE     - Go back to main menu.
 
 Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a power cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
