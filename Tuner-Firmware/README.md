@@ -1,7 +1,7 @@
-# Tuner-Firmware:
-The ATU-10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW v1.6. The main purpose of the Bluetooth interface is to connect the Tuner to the IC-705 in order to change the Tuner relay setting on band change to previously tuned bands. 
+# Tuner-Firmware
+The ATU-10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW v1.6, with additional features. The main purpose of the Bluetooth interface is to connect the Tuner to the IC-705 in order to change the Tuner relay setting on band change to previously tuned bands. 
 
-Main New Features:
+Main New Features
 - Bluetooth interface for connection to the IC-705 transceiver:
   - Receive frequency/band and SWR information from the transceiver.
   - Save and restore relay settings for each band.
@@ -9,11 +9,12 @@ Main New Features:
   - Optionally add a HF-VHF/UHF antenna switch and additional BNC connector.
 - Show current relay setting and band on the OLED display.
 - Extensive OLED Settings menu for Cell Parameters, BT unpair, relay testing and more.
+- Tune Memory providing fast tuning also when BT is not connected to transceiver.
 - Slightly more persistent tuning algorithm that may tune some previously difficult antennas.
 
 Note that if this firmware is used without the Bluetooth Interface it is important that LED1 is NOT installed - otherwise it will light up and drain the battery, also when power is off.
 
-### Bluetooth Connection States:
+### Bluetooth Connection States
 When the Tuner is connected via Bluetooth to an IC-705, it will enter one of these States:
 - UNPAIRED - Will try to pair for 2 minutes after power up, then Bluetooth is turned off.
 - PAIRED - Will try to connect as long as power is on.
@@ -22,20 +23,20 @@ When the Tuner is connected via Bluetooth to an IC-705, it will enter one of the
 
 When NOT Connected or in Standby mode the tuner will operate as a regular automatic tuner and will shut down after the time specified in the CELL setting.
 
-### OLED Display Layout:
+### OLED Display Layout
 The OLED display includes Band Relay Setting and Bluetooth State in addition to Power, SWR and Battery.
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-OLED.jpg)
 
 When the Tune Flag is on the Tuner will tune on next TX and the flag is cleared. A long Button push will set the Tune Flag again and force a manual re-tune. It can be worthwhile to re-tune if there is a significant SWR increase right after tuning. A short button push will set the Tuner in bypass and disable tuning. The SWR Correction Flag indicates that the SWR is adjusted to match the transceiver SWR - the correction and flag is cleared on band change.
 
-### Settings OLED Menu:
+### Settings OLED Menu
 The code includes a Settings OLED menu which can be activated by pushing the button for more than 3 seconds. The menu is controlled by these button inputs:
 - SELECT - long button push: do some action on current menu item.
 - DONE   - short button push: done with current menu item, move on to next.
 - UP/DOWN - double short button push: change step direction when changing values - down is indicated by a down arrow.
 
-#### Settings Menu:
+#### Settings Menu
 - POWER OFF  - Power off sleep
 - CLR BANDS  - Clear relay settings and set Tune Flag for all bands.
 - CELL PARAM - Change the CELL parameters as defined in FW v1.6 README file.
@@ -50,7 +51,7 @@ The code includes a Settings OLED menu which can be activated by pushing the but
   - BRIGHT xx - Change OLED brightness.
 - <=DONE     - Go back to normal Tuner operation.
 
-#### STANDBY sub-menu:
+#### STANDBY sub-menu
 - HOURS  xxx - Number of hours active standby, select 0 to turn OFF, 255 for INFINITE.
   - INFINITE - Standby Infinitely On, SELECT to change.
   -   OFF - Standby Off, SELECT to change.
@@ -59,7 +60,7 @@ The code includes a Settings OLED menu which can be activated by pushing the but
 
 If STANDBY is enabled, the tuner will enter STANDBY state after being connected to the transceiver and then disconnected. It will then try to reconnect for the standby HOURS set, then POWER OFF at timeout. Any button action will power the Tuner up again trying to reconnect for a period - another short button push will clear standby. In standby OFF mode the Tuner will still try to reconnect, but will do normal POWER OFF according to the CELL setting timeout and require >3 seconds button push to wake. 
 
-#### RELAY TEST sub-menu:
+#### RELAY TEST sub-menu
 - ANT RELAY  - Change antenna switch setting (only when not CONNECTED), SELECT to start.
   -  HF      - HF antenna connector is selected, SELECT to change (may fail if BT is busy - try again).
   -  V/UHF   - VHF/UHF antenna connector is selected, SELECT to change.
@@ -85,6 +86,13 @@ Note that the menu is blocking tuner operation and the tuner may be out of sync 
 10) Peak detector time for Power measurement in tens ms, 60 (600ms)
 
 Note particularly parameter 3, relay delay time - this may need to be increased if relays other than genuine AXICOM IM41 3VDC are used. The OLED Settings Menu has a RELAY TEST that may be useful for testing.
+
+### Tuning
+The tuner can usually auto-tune to SWR 1.2 or better, except for 80m and 160m where it is more like SWR 1.5 due to limitations in the SWR measurement precision. It is often possible to improve the transceiver SWR with manual tuning (using OLED Settings/RELAY TEST/TUNE L/C/I), although usually not needed.
+
+After tuning, the relay setting is stored in RAM and EEPROM tune memory, either in dedicated band slots if tuner is connected to the transceiver trough BT, or in random slots if unconnected. If connected, the relay setting is restored on band change while if unconnected the tune memory is searched for best SWR at tuning start and accepted as tuned if SWR is better than specified in Cell parameter 6, Delta SWR.
+
+Note that if the tuner is first used in connected mode and all bands are tuned, the band memory then need to be cleared in order to be available for unconnected mode (using OLED Settings/CLR BANDS). If only some band slots are used in connected mode, the other slots are available for unconnected mode without further action.
 
 ### Power Consumption
 The BT Interface will not significantly increase power consumption. When BT is Connected, the Tuner is turned off whenever the OLED display is off and this may actually reduce power consumption somewhat. Standby mode use some power, but reasonably good batteries should still last 1-2 months with 90 second retry interval. If using the Tuner for extended periods without using BT, Unpairing BT will reduce power consumption somewhat since it otherwise will continuously try reconnecting.
