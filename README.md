@@ -12,6 +12,7 @@ Main New Features:
   - Optionally add a HF-VHF/UHF antenna switch and additional BNC connector.
 - Show current relay setting and band on the OLED display.
 - Extensive OLED Settings menu for Cell Parameters, BT unpair, relay testing and more.
+- Tune Memory providing fast tuning also when BT is not connected to transceiver.
 - Slightly more persistent tuning algorithm that may tune some previously difficult antennas.
 
 Background:\
