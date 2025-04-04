@@ -1,4 +1,4 @@
-# Tuner-Firmware
+# Tuner Firmware
 The ATU-10-BT code is based on ATU-10 FW version 1.6 and is ported from microC to the free MPLAB XC8 compiler. When not connected via Bluetooth to an IC-705, the Tuner will mainly operate as with the original FW v1.6, with additional features. The main purpose of the Bluetooth interface is to connect the Tuner to the IC-705 in order to change the Tuner relay setting on band change to previously tuned bands. 
 
 Main New Features
@@ -47,7 +47,7 @@ The code includes a Settings OLED menu which can be activated by pushing the but
 - TUNER CONF - Tuner configuration. Show info and set various tuner settings.
   - INFO     - Show power-up greeting and battery voltage.
   - SWR CORR ON/OFF x - SWR correction enable/disable.
-  - DEBUG LEVEL x - Change debug level, 0-3. Sniff the Tuner TX line for printouts (115200 baud).
+  - DEBUG LEVEL x - Change debug level, 0-4. Sniff the Tuner TX line for printouts (115200 baud).
   - BRIGHT xx - Change OLED brightness.
 - <=DONE     - Go back to normal Tuner operation.
 
@@ -73,7 +73,7 @@ If STANDBY is enabled, the tuner will enter STANDBY state after being connected 
 
 Note that the menu is blocking tuner operation and the tuner may be out of sync with the Bluetooth interface on exit - try a power cycle if there is any issue. The menu will time out after 10 minutes of inactivity.
 
-#### The CELL parameters are as defined in FW 1.6 README file, but with some different default values:
+#### The CELL parameters are as defined in FW 1.6 README file, but with some different default values
 1) Time to display off in minutes, 2 mins by default, 0 to always on display
 2) Time to power off in minutes, 30 mins by default, 0 to always power on
 3) Relay's delay time, voltage applied to coiled in ms, 3 ms by default (using AXICOM IM41 3VDC relays)
