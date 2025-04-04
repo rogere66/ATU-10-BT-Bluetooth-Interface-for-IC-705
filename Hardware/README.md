@@ -3,7 +3,7 @@ The Bluetooth interface (BT) use the Cypress CYBT-413061-02 Bluetooth module, ba
 
 [BT Interface Schematic](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Hardware/ATU-10-Bluetooth-IF.pdf)
 
-The BT module is mounted bottom up on the mezzanine board with the antenna over the OLED display and towards the front panel. Part of the copper layer on the inside of the front panel is removed to (hopefully) get more BT RF to the outside - seems to work quite well anyways.
+It would of course be nice to have a custom PCB, but it is also reasonably easy to build the interface using a prototype board. The BT module is mounted bottom up with the antenna over the OLED display towards the front panel. Part of the copper layer on the inside of the front panel is removed to (hopefully) get more BT RF to the outside - seems to work quite well anyways.
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-IF-Mount.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/BT-IF-Mount.jpg)
 
