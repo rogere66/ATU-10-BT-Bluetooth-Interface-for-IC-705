@@ -34,5 +34,5 @@ The project also includes an optional HF-VHF/UHF antenna switch and additional B
 Suggested mounting of C2 and C3, vertically on the ATU10 board close to the relay:\
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg)
 
-The new rear end:\
+The new rear panel:\
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-BT-Back.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-BT-Back.jpg)
