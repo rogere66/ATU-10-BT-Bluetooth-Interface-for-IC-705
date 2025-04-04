@@ -21,18 +21,18 @@ ATU-10 Board with Location of Relevant Components:\
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-PCB.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-PCB.jpg)
 
 ATU-10 Hardware Versions:\
-There seems to be a few different versions of the ATU-10 available and some may be more suited than others for the BT modification. The one used for development has a few noticeable features different from other versions though: the end panels are fastened with hex cap-head screws, the BNC connectors are fastened with nuts and the front panel has white frames around the openings. These features may (or not) give some indicatiaon on how suitable it is for modification.
+There seems to be a few different versions of the ATU-10 available and some may be more suited than others for the BT modification. The one used for development has a few noticeable features different from other versions though: the end panels are fastened with hex cap-head screws, the BNC connectors are fastened with nuts and the front panel has white frames around the openings. These features may (or not) give some indication on how suitable it is for modification.
 
 A note on the OLED display:\
 The tuner used for development had an issue with random errors on the display, and also on a replacement display. This was tracked down to be a bad LDO voltage regulator on both displays and was fixed by replacing the LDO (f.e. AP2138N-3.3) - it is the 3 pin chip on the back side of the display.
 
-### Antenna Switch:
-The project also includes an optional HF-VHF/UHF antenna switch and additional BNC connector. Mounting the BNC connector is a very thight fit and requires to remove the 3.5mm JACK1 (which is redundant when using BT) and move T8 slightly sideways. A new back panel is also needed. The switch cause some issues with increased SWR on the UHF band, but keeping the coax short (like 40cm) between tranceiver and tuner bring this down to an acceptable level.
+### Antenna Switch
+The project also includes an optional HF-VHF/UHF antenna switch and additional BNC connector. Mounting the BNC connector is a very tight fit and requires to remove the 3.5mm JACK1 (which is redundant when using BT) and move T8 slightly sideways. A new back panel is also needed. The switch cause some issues with increased SWR on the UHF band, but keeping the coax short (like 40cm) between transceiver and tuner bring this down to an acceptable level.
 
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay.jpg)
 
 Suggested mounting of C2 and C3, vertically on the ATU10 board close to the relay:\
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/Ant-Relay-Caps.jpg)
 
-That's all!\
+The new rear end:\
 ![https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-BT-Back.jpg](https://github.com/rogere66/ATU-10-BT-Bluetooth-Interface-for-IC-705/blob/main/Pictures/ATU-10-BT-Back.jpg)
