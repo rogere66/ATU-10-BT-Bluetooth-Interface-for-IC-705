@@ -12,7 +12,7 @@ Programming the Bluetooth interface requires a serial port with RX, TX, RTS and 
 - Unzip the file and run the AIROC_MOD_Programmer.
 - Select Module Name `CYBT-413061-02`
 - Select serial port on one of the DUT lines.
-- Select the Firmware File.
+- Select the IC-705-Tuner-BT_vXX.hex Firmware File.
 - Tick the `Program BD Address` and `Gen a random address` boxes to get a unique local BD address.
 - Put the ATU-10-BT board in download mode: Push and hold the RECOVERY button, push and release the RESET button and then release the RECOVERY button after 1 second.
 - Hit `Program` and wait for completion.
