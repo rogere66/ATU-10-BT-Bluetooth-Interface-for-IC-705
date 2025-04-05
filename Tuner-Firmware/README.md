@@ -97,5 +97,7 @@ Note that if the tuner is first used in connected mode and all bands are tuned, 
 ### Power Consumption
 The BT Interface will not significantly increase power consumption. When BT is Connected, the Tuner is turned off whenever the OLED display is off and this may actually reduce power consumption somewhat. Standby mode use some power, but reasonably good batteries should still last 1-2 months with 90 second retry interval. If using the Tuner for extended periods without using BT, Unpairing BT will reduce power consumption somewhat since it otherwise will continuously try reconnecting.
 
-### Compiling the Code
+### Compiling and Programming the Code
 The code can be compiled using the free MPLAB X IDE and XC8 compiler from [Microchip](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide). Just make a project for the pic16f18877 chip and copy in the Tuner sources. Note that the free version of the XC8 compiler has limited optimization and thus tuning is slower than for FW v1.6. However, this is to a large degree compensated for by optimizing delays in the code and also, when connected, tuning is often not needed.
+
+Programming is done by connecting to the ATU-10 USB port and copying the `ATU-10-BT_vXX.hex` file to the `ATU-10 Prog` logical disk.
