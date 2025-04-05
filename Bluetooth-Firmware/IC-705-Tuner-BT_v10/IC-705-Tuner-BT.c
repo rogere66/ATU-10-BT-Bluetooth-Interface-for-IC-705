@@ -33,21 +33,22 @@
 #include <ATU-10-BT-Comms.h>
 
 // pin allocations:
-#define RX2_WAKE_PIN 34   // UART 2 (PUART) RX pin + shut down/wake control
-#define TX2_PIN      10   // UART 2 (PUART) TX pin
-#define RELAY_PIN_A  1    // HF-VHF/UHF antenna bi-stable relay pin A, Low pulse for HF
-#define RELAY_PIN_B  29   // HF-VHF/UHF antenna bi-stable relay pin B, Low pulse for VHF/UHF
+#define RX2_WAKE_PIN 34  // UART 2 (PUART) RX pin + shut down/wake control
+#define TX2_PIN      10  // UART 2 (PUART) TX pin
+#define RELAY_PIN_A  1   // HF-VHF/UHF antenna bi-stable relay pin A, Low pulse for HF
+#define RELAY_PIN_B  29  // HF-VHF/UHF antenna bi-stable relay pin B, Low pulse for VHF/UHF
 
-// Icom CIV (CI-V) defines:
-#define IC_705_ADDR  0xa4 // IC-705 CIV address
-#define CTRL_ADDR    0xe0 // Controller CIV address
-#define TRSV_ADDR    0x00 // Controller CIV address in transceive mode (rx only)
-#define CIV_SOM      0xfe // CIV Start Of Message byte
-#define CIV_EOM      0xfd // CIV End Of Message byte
-#define CIV_OK       0xfb // CIV OK response code
-#define CIV_NG       0xfa // CIV No Good response code
-#define CIV_MIN_LEN  6    // minimum CIV message length
-#define CIV_BUF_SIZE 32   // CIV RX buffer size
+// Icom BT/CIV (CI-V) defines:
+#define REMOTE_BT_NAME "ICOM BT(IC-705)"  // IC-705 BT device name
+#define TRX_CIV_ADDR   0xa4  // IC-705 CIV address
+#define CTRL_CIV_ADDR  0xe0  // Controller CIV address
+#define TRSV_CIV_ADDR  0x00  // Controller CIV address in transceive mode (rx only)
+#define CIV_SOM        0xfe  // CIV Start Of Message byte
+#define CIV_EOM        0xfd  // CIV End Of Message byte
+#define CIV_OK         0xfb  // CIV OK response code
+#define CIV_NG         0xfa  // CIV No Good response code
+#define CIV_MIN_LEN    6     // minimum CIV message length
+#define CIV_BUF_SIZE   32    // CIV RX buffer size
 
 // CIV command defines: byte 0 = length of data field, byte 1 = length of command/sub-command field
 const uint8_t CIV_Freq_Trc[]  = {5, 1, 0x00};                   // frequency transceive message
@@ -61,7 +62,7 @@ const uint8_t CIV_PTT_TrcEn[] = {1, 3, 0x24, 0x00, 0x00};       // PTT transceiv
 const uint8_t CIV_PTT_Trc[]   = {1, 3, 0x24, 0x00, 0x01};       // PTT transceive message
 
 // globals:
-int dbLevel     = 2;  // debug message level: 0-3 for min to max info
+int dbLevel     = 0;  // debug message level: 0-3 for min to max info
 int g_frequency = 0;  // current frequency
 int g_band      = -1; // current band, 1-13, or 0/14 if outside HF/VHF-UHF bands
 int g_ptt       = 0;  // current RX/TX state, 0 = RX, 1 = TX
@@ -94,7 +95,7 @@ wiced_event_flags_t *btEventFlags;
 // miscellaneous defines:
 #define time_ms() ((uint32_t)(clock_SystemTimeMicroseconds64()/1000))
 #define SPP_NVRAM_ID WICED_NVRAM_VSID_START  // NVRAM used for paired BT ID
-#define TMSG_ACK_TIMEOUT_MS      100         // acknowledge timeout for tuner control messages
+#define TMSG_ACK_TIMEOUT_MS      10          // acknowledge timeout for tuner control messages
 #define ANTENNA_RELAY_SW_TIME_MS 3           // antenna relay switch pulse length
 
 
@@ -196,7 +197,7 @@ char crc5 (int iVal) {
 int u2BreakDetect (void) {
   uint32_t startTime = clock_SystemTimeMicroseconds32();
   while (!wiced_hal_gpio_get_pin_input_status (RX2_WAKE_PIN))
-    if ((clock_SystemTimeMicroseconds32() - startTime) > 1000)
+    if ((clock_SystemTimeMicroseconds32() - startTime) > 500)
       return 1;
 
   return 0;
@@ -277,9 +278,9 @@ int bcd2int (uint8_t *bcd, int len, uint32_t *oVal) {
 // bluetooth connection states:
 typedef enum {
   BT_START,         // initial state
-  BT_INQUIRY,       // scan for IC-705 device
-  BT_DISCOVERED,    // IC-705 found
-  BT_CONNECTING,    // connecting to IC-705
+  BT_INQUIRY,       // scan for remote BT device
+  BT_DISCOVERED,    // remote BT found
+  BT_CONNECTING,    // connecting to remote BT
   BT_CONNECTED,     // connected and paired
   BT_CIV_READY,     // CI-V connection verified
   BT_CONN_DOWN,     // connection failed - retry
@@ -290,9 +291,9 @@ btStates_t g_btState;
 void btStateChange (btStates_t newState);
 void btStateProcess (void);
 
-uint32_t btHoldoffTimer = 0;
-int      ic_705_Found   = 0;
-uint8_t  ic_705_btAddr[6];   // IC-705 BT address
+uint32_t btHoldoffTimer  = 0;
+int      remote_BT_Found = 0;
+uint8_t  remote_BT_btAddr[6];   // remote BT address
 
 // BT parameter settings in tuner_bt_cfg.c:
 extern const wiced_bt_cfg_settings_t wiced_bt_cfg_settings;
@@ -302,7 +303,7 @@ static uint8_t  btConnState = 0;
 void btConnectionStateUpdate (uint8_t new_btConnState) {
   if (new_btConnState != T_CONN) {
     wiced_result_t status;
-    if (wiced_hal_read_nvram (SPP_NVRAM_ID, 6, ic_705_btAddr, &status) == 6)
+    if (wiced_hal_read_nvram (SPP_NVRAM_ID, 6, remote_BT_btAddr, &status) == 6)
       new_btConnState = T_PAIRD;
     else
       new_btConnState = T_NOPR;
@@ -373,19 +374,19 @@ void btConnect (uint8_t *bt_addr) {
   btStateChange (BT_CONNECTING);
 }
 
-// run BT discovery looking for device named "ICOM BT(IC-705)":
+// run BT discovery looking for device named REMOTE_BT_NAME:
 void bt_inquiry_callback (wiced_bt_dev_inquiry_scan_result_t *p_inquiry_result, uint8_t *p_eir_data) {
   uint8_t len;
 
   if (p_inquiry_result != NULL) {
     while ((len = *p_eir_data) != 0) {
       if ((p_eir_data[0] == 16) && (p_eir_data[1] == 0x09)
-        && (memcmp (&p_eir_data[2], "ICOM BT(IC-705)", 14) == 0)) {
+        && (memcmp (&p_eir_data[2], REMOTE_BT_NAME, sizeof (REMOTE_BT_NAME) - 1) == 0)) {
         for (int i = 0; i < 6; i++)
-          ic_705_btAddr[i] = p_inquiry_result->remote_bd_addr[i];
+          remote_BT_btAddr[i] = p_inquiry_result->remote_bd_addr[i];
 
         btStateChange (BT_DISCOVERED);
-        deBUG_PRINTF_2 ("IC-705 Found\n");
+        deBUG_PRINTF_2 ("remote BT Found\n");
       }
       p_eir_data += len;
     }
@@ -443,8 +444,8 @@ void btStateProcess (void) {
         btSPPconnHandle = 0;
       }
       wiced_result_t status;
-      if (wiced_hal_read_nvram (SPP_NVRAM_ID, 6, ic_705_btAddr, &status) == 6) {
-        btConnect (ic_705_btAddr);
+      if (wiced_hal_read_nvram (SPP_NVRAM_ID, 6, remote_BT_btAddr, &status) == 6) {
+        btConnect (remote_BT_btAddr);
       } else {
         btInquiryTimer = time_ms();
         btStartInquiry();
@@ -464,7 +465,7 @@ void btStateProcess (void) {
 
   case BT_DISCOVERED:
     wiced_bt_cancel_inquiry();
-    btConnect (ic_705_btAddr);
+    btConnect (remote_BT_btAddr);
     break;
 
   case BT_CONNECTED:
@@ -497,7 +498,7 @@ void btStateProcess (void) {
 //   1st byte: data field length - not used here
 //   2nd byte: length of the message following in the next bytes
 int civTx (const uint8_t *msg) {
-  uint8_t txBuf[] = {CIV_SOM, CIV_SOM, IC_705_ADDR, CTRL_ADDR, 0,0,0,0,0,0,0,0,0,0,0,0};
+  uint8_t txBuf[] = {CIV_SOM, CIV_SOM, TRX_CIV_ADDR, CTRL_CIV_ADDR, 0,0,0,0,0,0,0,0,0,0,0,0};
   int i, writeLen = 0;
 
   for (i = 0; (i < msg[1]) && (i < (sizeof(txBuf) - 5)); i++)
@@ -562,7 +563,7 @@ int civRx (uint8_t *msg, int maxLen) {
     return 0;
 
   // verify message address:
-  if (((tmpRxBuf[2] == CTRL_ADDR) || (tmpRxBuf[2] == TRSV_ADDR)) && (tmpRxBuf[3] == IC_705_ADDR)) {
+  if (((tmpRxBuf[2] == CTRL_CIV_ADDR) || (tmpRxBuf[2] == TRSV_CIV_ADDR)) && (tmpRxBuf[3] == TRX_CIV_ADDR)) {
     // get message:
     for (int n = 0; (n < maxLen) && (n< (CIV_BUF_SIZE - 4)); n++) {
       if (tmpRxBuf[n + 4] != CIV_EOM)
@@ -622,7 +623,7 @@ unsigned int civSWRtoSWR_100 (int civSWR) {
 //  map frequency to bands:
 
 #define VHF_LOW_FREQ 74800000  // VHF low end frequency (IC-705 flips internal relay here)
-#define BAND_SLOTS MAX_BANDS-2
+#define BAND_SLOTS ALL_BANDS-2
 
 const uint32_t bandTab[BAND_SLOTS][2] = {  // extended band limits without gaps
                              //  0: below HF bands
@@ -737,7 +738,7 @@ int civRxProcess (void) {
     else if (civCmd (CIV_SWR_Get)) {
       g_SWR_time = time_ms();
       g_swr = civSWRtoSWR_100 (civData);
-      deBUG_PRINTF_2 ("SWR %d.%02d\n", g_swr / 100, g_swr % 100);
+      deBUG_PRINTF_2 ("SWR CIV %d => %d.%02d\n", civData, g_swr / 100, g_swr % 100);
     }
 
     // OK/NG messages:
@@ -785,7 +786,7 @@ void btTask (void* arg) {
             wiced_rtos_delay_milliseconds (10, ALLOW_THREAD_TO_SLEEP);
         }
         else {
-          deBUG_PRINTF_1 ("**** No Response from IC-705 - Disconnecting ****\n");
+          deBUG_PRINTF_1 ("**** No Response from remote BT - Disconnecting ****\n");
           btStateChange (BT_CONN_DOWN);
         }
       }
@@ -817,10 +818,11 @@ void cliTask (void* arg) {
       if (cmd[0] == 'L') {
         wiced_rtos_pop_from_queue (hostRxBufHandle, cmd, 0);
         if (cmd[0] == 'I') {
-          if (!g_cliMode)
+          if (!g_cliMode) {
             uPuts ("\nCLI enabled\n");
-          g_cliMode |= 1;
-          cmd[0] = 'h';
+            g_cliMode = 1;
+            cmd[0] = 'h';
+          }
         }
       }
     }
@@ -862,30 +864,27 @@ void cliTask (void* arg) {
       else if (cmd[0] == 'u') {
         uPuts ("Do You want to unpair BlueTooth device?\n");
         unpairRequest = 1;
-        g_cliMode = 1;
       }
 
       else if (cmd[0] == 'd') {
         if (++dbLevel > 3)
           dbLevel = 0;
         uPrintf ("Debug Level %d\n", dbLevel);
-        g_cliMode = 1;
       }
 
       else if (cmd[0] == 's') {
         unsigned char buf[8];
+        uPrintf ("\nStatus %s v%s:\n", PROJECT_NAME, PROJECT_VERSION);
 
-        uPrintf ("btTask stack usage %d\n", wiced_bt_rtos_max_stack_use (btTaskHandle));
-        uPrintf ("cliTask stack usage %d\n", wiced_bt_rtos_max_stack_use (cliTaskHandle));
-        uPrintf ("tunerTask stack usage %d\n", wiced_bt_rtos_max_stack_use (tunerTaskHandle));
+        wiced_bt_dev_read_local_addr (buf);
+        uPrintf ("Local BD Address  %02X %02X %02X %02X %02X %02X\n", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5]);
 
         wiced_result_t status;
         int n = wiced_hal_read_nvram (SPP_NVRAM_ID, 6, buf, &status);
         if (n != 6)
           uPrintf ("BT not paired\n");
         else
-          uPrintf ("BT paired to address %02X %02X %02X %02X %02X %02X\n", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5]);
-        g_cliMode = 1;
+          uPrintf ("Paired to BD Address %02X %02X %02X %02X %02X %02X\n", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5]);
       }
 
       else if (cmd[0] == 'x') {
@@ -901,13 +900,12 @@ void cliTask (void* arg) {
         uPuts (" d - change debug level\n");
         uPuts (" s - show BT status\n");
         uPuts (" x - close BT and Tuner CLI\n");
-        g_cliMode = 1;
       }
 
       else {
         if ((cmd[0] != '\n') && (cmd[0] != '\r'))
           uPrintf ("0x%02x not recognized, type h|? for help\n", cmd[0]);
-        else if (g_cliMode != 2)
+        else if (g_cliMode == 1)
           uPuts ("Enter BT Command$\n");
       }
     }
@@ -926,10 +924,11 @@ void tunerTask (void* arg) {
   uint32_t bandMsgTime = 0, stateMsgTime = 0, txStateMsgTime = 0;
   uint8_t  bandMessage = 0, stateMessage = 0, txStateMessage = 0;
   int      bandRetries = 0, stateRetries = 0, txStateRetries = 0, tuning = 0;
+  uint32_t pttTimer = 0, pttCount = 0, swrPoRequestTime = 0;
   wiced_result_t status;
 
   // send T_NOPR message immediately if BT is unpaired:
-  if (wiced_hal_read_nvram (SPP_NVRAM_ID, 6, ic_705_btAddr, &status) != 6) {
+  if (wiced_hal_read_nvram (SPP_NVRAM_ID, 6, remote_BT_btAddr, &status) != 6) {
     buf[0] = T_NOPR;
     wiced_rtos_push_to_queue (tunerMsgBufHandle, buf, 0);
   }
@@ -963,7 +962,8 @@ void tunerTask (void* arg) {
 
           else if (c1 == T_TEND) {
             if (tuning) {
-              tuning = 0;
+              tuning   = 0;
+              pttCount = 8;
               deBUG_PRINTF_2 ("Tune End\n");
             }
           }
@@ -1059,9 +1059,8 @@ void tunerTask (void* arg) {
     }
 
     // send SWR to tuner when transmitting and not tuning:
-    static uint32_t pttTimer = 0, pttCount = 0, swrPoRequestTime = 0;
     if (g_ptt && !tuning) {
-      if ((time_ms() - pttTimer) > 500) {
+      if ((time_ms() - pttTimer) > 300) {
         pttTimer = time_ms();
         pttCount++;
         if (g_frequency < VHF_LOW_FREQ) {
@@ -1071,6 +1070,7 @@ void tunerTask (void* arg) {
             swrPoRequestTime = time_ms();
           }
 
+          // send SWR to Tuner when it's updated:
           if ((g_SWR_time > swrPoRequestTime) && (g_Po_time > swrPoRequestTime) && (g_pwr >= 50)) { // ca 1W
             u2Send3bCmd (T_SWR, g_swr);
             swrPoRequestTime = time_ms();
@@ -1078,8 +1078,10 @@ void tunerTask (void* arg) {
           }
         }
       }
-    } else  // RX
+    } else { // RX
       pttCount = 7;
+      tuning   = 0;
+    }
 
     // detect shutdown condition, i.e. UART2 RX line stay LOW for extended time:
     if (u2BreakDetect ())
@@ -1221,18 +1223,6 @@ APPLICATION_START () {
   wiced_hal_gpio_configure_pin (TX2_PIN,     GPIO_OUTPUT_ENABLE, 1);
   wiced_hal_gpio_configure_pin (RX2_WAKE_PIN, GPIO_INPUT_ENABLE, 1);
 
-  //RE always select HF antenna at power-up: TODO evaluate this (maybe only when paired?) probably need to be controlled from PIC
-  wiced_hal_gpio_set_pin_output (RELAY_PIN_B, 0);
-  wiced_rtos_delay_milliseconds (ANTENNA_RELAY_SW_TIME_MS, KEEP_THREAD_ACTIVE);
-  wiced_hal_gpio_set_pin_output (RELAY_PIN_B, 1);
-  wiced_rtos_delay_milliseconds (200, KEEP_THREAD_ACTIVE);
-
-  wiced_hal_gpio_set_pin_output (RELAY_PIN_A, 0);
-  wiced_rtos_delay_milliseconds (ANTENNA_RELAY_SW_TIME_MS, KEEP_THREAD_ACTIVE);
-  wiced_hal_gpio_set_pin_output (RELAY_PIN_A, 1);
-  g_relay = T_ANTHF;
-  wiced_rtos_delay_milliseconds (500, KEEP_THREAD_ACTIVE);
-
   // check for shutdown request from Tuner, i.e. UART2 RX line is low :
   if (u2BreakDetect ()) {
     // shutdown condition - enter shut down sleep mode:
@@ -1246,9 +1236,8 @@ APPLICATION_START () {
   else {
     // no shutdown - continue application start - init UART2:
     wiced_hal_puart_init();  // puart is used for communication with Tuner
-    wiced_hal_puart_select_uart_pads (RX2_WAKE_PIN, TX2_PIN, 0, 0);
-    wiced_hal_puart_configuration (115200, PARITY_NONE, STOP_BIT_1);
     wiced_hal_puart_flow_off();
+    wiced_hal_puart_select_uart_pads (RX2_WAKE_PIN, TX2_PIN, 0, 0);
     u2Putc ('V');
     u2Puts (PROJECT_VERSION);  // send BT code version to Tuner
 
