@@ -38,3 +38,6 @@ A full ModusToolbox IDE for just programming the module may be overkill, but now
 **NOTE:** The reason for changing the CYW20721B2 library to release 4.2.1 is that later releases have problems with Shut-Down-Sleep. The same problem arise when using the Device Configurator for pin allocation, thus all allocations are done in the source code. If compiling the code it is thus advisable to check the current consumption of the BT module when in Shut-Down-Sleep, i.e. when power is on and the Rx pin is Low - it should be less than 5 uA.
 
 Also note that the changes to library and pin selection is done on the BSP for the CYBT-413061-EVAL board and if a new application is created using this board, the BSP will be overwritten and the changes lost. This can be avoided by making a local copy of the BSP with a different name (also on the .mk file inside the BSP) and updating the makefile to enable and use this BSP.
+
+###### New in version 1.1:
+- Wake up IC-705 display on band change.
