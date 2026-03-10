@@ -5,7 +5,7 @@
 *****************************************************************************/
 
 #define PROJECT_NAME    "IC-705-Tuner-BT"
-#define PROJECT_VERSION "10"
+#define PROJECT_VERSION "11"
 
 // includes:
 #include <stdio.h>
@@ -60,6 +60,7 @@ const uint8_t CIV_SWR_Get[]   = {2, 2, 0x15, 0x12};             // get SWR meter
 const uint8_t CIV_TrcEn[]     = {1, 4, 0x1a, 0x05, 0x01, 0x31}; // frequency, mode etc transceive on/off
 const uint8_t CIV_PTT_TrcEn[] = {1, 3, 0x24, 0x00, 0x00};       // PTT transceive on/off
 const uint8_t CIV_PTT_Trc[]   = {1, 3, 0x24, 0x00, 0x01};       // PTT transceive message
+const uint8_t CIV_PTT_OnOff[] = {1, 2, 0x1c, 0x00};             // set/get PTT on/off state
 
 // globals:
 int dbLevel     = 0;  // debug message level: 0-3 for min to max info
@@ -708,6 +709,9 @@ int civRxProcess (void) {
       g_freq_time = time_ms();
       g_frequency = civData;
       if (updateBand() >= 0) {
+        civTxData (CIV_PTT_OnOff, 1);  // this will wake the display
+        civTxData (CIV_PTT_OnOff, 0);
+
         // set bi-stable antenna relay:
         if ((g_frequency < VHF_LOW_FREQ) && (g_relay != T_ANTHF)) {
           g_relay = T_ANTHF;
