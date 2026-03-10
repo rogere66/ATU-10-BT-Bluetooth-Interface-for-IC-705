@@ -4,7 +4,7 @@
 // by LB1LI 2025
 
 #define PROJECT_NAME    "ATU-10-BT"
-#define PROJECT_VERSION "10"
+#define PROJECT_VERSION "11"
 
 #include "pic_init.h"
 #include "main.h"
@@ -71,10 +71,7 @@ void show_Band_Relay (void) {
   }
 
   // show relay setting etc. on lower line:
-  if ((currentBand > HF_BANDS) && (currentBand < ALL_BANDS)) {
-    oled_wr_str (2, 0, "     ", 5);
-  }
-  else if ((currentBand <= HF_BANDS) || ((currentBand >= ALL_BANDS) && !(rel_I & I_UNNO))) {
+  if ((currentBand < ALL_BANDS) || ((currentBand >= ALL_BANDS) && !(rel_I & I_UNNO))) {
     char buf[] = { '0', '0', '0', '0', '0', '0', ' ', ' ' };
     IntToHex ((rel_L << 8) | rel_C, buf);
     oled_wr_str (2, 0, &buf[2], 5);
@@ -386,7 +383,7 @@ void btExtension_main (void) {
     currentBand = pendingBand;
     SWRcorrection = 0;
     draw_swr (0);
-    if (currentBand == 0)         // outside HF bands - set bypass:
+    if ((currentBand == 0) || (currentBand > HF_BANDS))  // outside HF bands - set bypass:
       Relay_set (0, 0, 0);
     else
       reloadStoredBand (currentBand);
@@ -495,6 +492,10 @@ void btExtension_main (void) {
           power_off (2);
           off_cnt = Off_time / 2;
           sleepTime_s = sleepTimeMax_s / 2;
+          if (btConnRetries > 10)
+            connRetryCntr = btConnRetries - 10;
+          else
+            connRetryCntr = 0;
         }
       }
     }
